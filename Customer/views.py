@@ -1,6 +1,16 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
+from django.contrib import admin
+from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
+from django.forms import inlineformset_factory
+from django.contrib.auth import authenticate, login, logout
+
+from .forms import *
+from.models import *
+from datetime import timezone
+
 def home(request):
     return render(request, 'Customer/main.html')
 
