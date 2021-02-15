@@ -3,9 +3,10 @@ from . import views
 
 urlpatterns = [
     path('', views.home),
-    path('notifications/', views.notif),
-    path('graphs/', views.graph),
-    path('models/', views.model),
+    path('notifications/', views.notif, name="notifications"),
+    path('graphs/', views.graph, name="graph"),
+    path('models/', views.model, name="model"),
+    path('profile/', views.profile, name="profile"),
 
     path('register/', views.register, name="register"),
     path('login/', views.loginUser, name="login"),

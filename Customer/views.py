@@ -12,7 +12,7 @@ from.models import *
 from datetime import timezone
 
 def home(request):
-    return render(request, 'Customer/main.html')
+    return render(request, 'Customer/dashboard.html')
 
 def notif(request):
     return render(request, 'Customer/notif.html')
@@ -22,6 +22,9 @@ def graph(request):
 
 def model(request):
     return render(request, 'Customer/model.html')
+
+def profile(request):
+    return render(request, 'Customer/profile.html')
 
 def register(request):
     form = CreateUserForm()
@@ -37,6 +40,7 @@ def register(request):
             return redirect('/login')
     context = {'form':form}
     return render(request, 'Customer/register.html', context)
+
 def loginUser(request):
     if request.method == 'POST':
         username = request.POST.get('username')

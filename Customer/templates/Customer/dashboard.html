@@ -1,5 +1,45 @@
-{% extends 'User/main.html' %}
+{% extends 'Customer/main.html' %}
 
 {% block content %}
-    <p> Dashboard </p>    
+    <br>   
+    <h2 style = "color:#000000;"class="lead display-4 font-weight-bold"><center>Welcome!</center></h2>
+    <br>
+      <div class="row text-white">
+        <div style = "margin-left:475px; margin-right:0px;margin-top:5px;">
+          <div class = "box" style = "display:flex;">
+            <figure>
+              <a href = "/profile">
+                <img style = "border: 5px solid #000000; " src="/static/images/profile.jpg" alt="..." height="220" width="220" class="mr-3 rounded shadow-sm">
+                <figcaption style = "color:black; font-weight:bold; text-align:center"> Profile </figcaption>
+              </a>
+            </figure>
+            <figure>
+              <a href = "/notifications">
+                <img style = "border: 5px solid #000000; margin-left:150px; bg-color:white;  " src="/static/images/notif.jpg" alt="..." height="220" width="220" class="mr-3 rounded shadow-sm">
+                <figcaption style = "color:black; font-weight:bold; text-align:center; margin-left:150px;"> Notifications </figcaption>
+              </a>
+            </figure>
+          </div>
+        </div>
+        <div style = "margin-left:475px; margin-top:40px; margin-right:0px;">
+          <div class = "box" style = "display:flex;">
+            <div>
+              <figure>
+                <a href = "/models">
+                  <img style = "border: 5px solid #000000;   " src="/static/images/model.jpg" alt="..." height="220" width="220" class="mr-3 rounded shadow-sm">
+                  <figcaption style = "color:black; font-weight:bold; text-align:center"> Models </figcaption>
+                </a>
+              </figure>
+            </div>
+            <div>
+              <figure>
+                <a href = "/graphs">
+                  <img style = "border: 5px solid #000000; margin-left:150px; bg-color:white; " src="/static/images/graph.png" alt="..." height="220" width="220" class="mr-3 rounded shadow-sm">
+                  <figcaption style = "color:black; font-weight:bold; text-align:center; margin-left:150px; "> Graphs </figcaption>
+                </a>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </div>
 {% endblock %}
