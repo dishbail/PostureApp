@@ -6,26 +6,34 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from django.forms import inlineformset_factory
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 from .forms import *
 from.models import *
+from .decorators import *
 from datetime import timezone
 
+@login_required(login_url='login')
 def home(request):
     return render(request, 'Customer/dashboard.html')
 
+@login_required(login_url='login')
 def notif(request):
     return render(request, 'Customer/notif.html')
 
+@login_required(login_url='login')
 def graph(request):
     return render(request, 'Customer/graph.html')
 
+@login_required(login_url='login')
 def model(request):
     return render(request, 'Customer/model.html')
 
+@login_required(login_url='login')
 def profile(request):
     return render(request, 'Customer/profile.html')
 
+@unauthenticated_user
 def register(request):
     form = CreateUserForm()
     if request.method == 'POST':
@@ -41,6 +49,7 @@ def register(request):
     context = {'form':form}
     return render(request, 'Customer/register.html', context)
 
+@unauthenticated_user
 def loginUser(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -58,6 +67,7 @@ def logoutUser(request):
     logout(request)
     return redirect('login')
 
+@login_required(login_url='login')
 def userSettings(request):
     customer = request.user.customer
     form = CustomerForm(instance=customer)
