@@ -13,23 +13,23 @@ from.models import *
 from .decorators import *
 from datetime import timezone
 
-@login_required(login_url='login')
+@login_required(login_url='Customer:login')
 def home(request):
     return render(request, 'Customer/dashboard.html')
 
-@login_required(login_url='login')
+@login_required(login_url='Customer:login')
 def notif(request):
     return render(request, 'Customer/notif.html')
 
-@login_required(login_url='login')
+@login_required(login_url='Customer:login')
 def graph(request):
     return render(request, 'Customer/graph.html')
 
-@login_required(login_url='login')
+@login_required(login_url='Customer:login')
 def model(request):
     return render(request, 'Customer/model.html')
 
-@login_required(login_url='login')
+@login_required(login_url='Customer:login')
 def profile(request):
     return render(request, 'Customer/profile.html')
 
@@ -67,7 +67,7 @@ def logoutUser(request):
     logout(request)
     return redirect('/login')
 
-@login_required(login_url='login')
+@login_required(login_url='Customer:login')
 def userSettings(request):
     customer = request.user.customer
     form = CustomerForm(instance=customer)
