@@ -8,6 +8,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.forms import inlineformset_factory
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from .forms import *
 from.models import *
@@ -35,24 +36,18 @@ def profile(request):
     return render(request, 'Customer/profile.html')
 
 def getGraphData(request):
-    #customer = request.user.customer
-    #posture_data = customer.posturerecord_set.all()
-    #sitting_data = customer.sittingrecord_set.all()
-    posture_dates = []
-    posture_values = []
-    sitting_dates = []
-    sitting_values = []
-    #for i in posture_data:
-        #posture_dates.append(i.date_created)
-        #posture_values.append(i.posture_value)
-    #for i in sitting_data:
-        #sitting_dates.append(i.date_created)
-        #sitting_values.append(i.sitting_time_in_min)
-    posture_dates = ["monday", "tuesday"]
-    posture_values = [2,3]
-    sitting_dates = ["wednesday", "tuesday"]
-    sitting_values = [4,5]
-    return JsonResponse({'posture_dates': posture_dates, 'posture_values':posture_values, 'sitting_dates':sitting_dates, 'sitting_values':sitting_values})
+    customer = request.user.customer
+    posture_database = customer.posturerecord_set.all()
+    sitting_database = customer.sittingrecord_set.all()
+    posture_data = []
+    sitting_data = []
+    for i in posture_database:
+        posture_data.append([i.date_created, i.posture_value])
+    for i in sitting_database:
+        sitting_data.append([i.date_created, i.sitting_time_in_min])
+    posture_data = []
+    sitting_data = []
+    return JsonResponse({'posture_data': posture_data, 'sitting_data':sitting_data})
 
 @unauthenticated_user
 def register(request):
