@@ -1,5 +1,21 @@
 {% extends 'Customer/main.html' %}
 
 {% block content %}
-    <p> Graph </p>    
+    <p> Graph </p>
+    <div id="container" style="width: 75%;">
+        <canvas id="posture-chart" data-url="{% url 'posture-chart' %}"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script>
+        var $postureChart = $("#posture-chart");
+        $.ajax({
+            url:'/getGraphData'
+            succes:function(response){
+                var posture_dates = response.pop('posture_dates');
+                var posture_values = response.pop('posture_values');
+                var sitting_dates = response.pop('sitting_dates');
+                var sitting_values = response.pop('sitting_values');
+            }
+        });
+    </script>
 {% endblock %}

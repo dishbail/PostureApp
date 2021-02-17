@@ -13,3 +13,18 @@ class Customer(models.Model):
 
     def __str__(self):
         return self.user.username
+
+class PostureRecord(models.Model):
+    POSTURE_CHOICES = [
+        (1, 'Correct Posture'),
+        (0, 'Incorrect Posture')
+    ]
+    customer = models.ForeignKey(Customer, null = True, on_delete=models.SET_NULL)
+    date_created = models.DateTimeField(default=timezone.now(),blank=True, null=True)
+    posture_value = models.IntegerChoices(choices = POSTURE_CHOICES, null = True)
+    confidence_value = models.FloatField(default = 1)
+
+class SittingRecord(models.Model):
+    customer = models.ForeignKey(Customer, null = True, on_delete=models.SET_NULL)
+    date_created = models.DateTimeField(default=timezone.now(),blank=True, null=True)
+    sitting_time_in_min = models.FloatField(default = 0)

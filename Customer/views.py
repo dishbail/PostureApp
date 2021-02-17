@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import JsonResponse
 
 from django.contrib import admin
 from django.contrib.auth.models import User
@@ -32,6 +33,22 @@ def model(request):
 @login_required(login_url='Customer:login')
 def profile(request):
     return render(request, 'Customer/profile.html')
+
+def getGraphData(request):
+    customer = request.user.customer
+    posture_data = customer.posturerecord_set.all()
+    sitting_data = customer.sittingrecord_set.all()
+    posture_dates = []
+    posture_values = []
+    sitting_dates = []
+    sitting_values = []
+    for i in posture_data:
+        posture_dates.append(i.date_created)
+        posture_values.append(i.posture_value)
+    for i in sitting_data:
+        sitting_dates.append(i.date_created)
+        sitting_values.append(i.sitting_time_in_min)
+    return JsonResponse({'posture_dates': posture_dates, 'posture_values':posture_values, 'sitting_dates':sitting_dates, 'sitting_values':sitting_values})
 
 @unauthenticated_user
 def register(request):
