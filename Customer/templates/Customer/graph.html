@@ -1,5 +1,35 @@
 {% extends 'Customer/main.html' %}
 
 {% block content %}
-    <p> Graph </p>    
+    <p> Graph </p>
+    <div id="container" style="width: 75%;">
+        <canvas id="posture-chart" data-url="{% url 'Customer:get_graph_data' %}"></canvas>
+        <canvas id="sitting-chart" data-url="{% url 'Customer:get_graph_data' %}"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script>
+        var $postureChart = $("#posture-chart");
+        var $sittingChart = $("#sitting-chart");
+        $.ajax({
+            url:'/getGraphData'
+            success:function(response)
+                var ctxp = $postureChart[0].getContext("2d");
+                var ctxs = $sittingChart[0].getContext("2d");
+                new Chart(ctxp, {
+                    type: 'bar',
+                    data: {
+                      labels: response.posture_dates,
+                      datasets: [{
+                        label: 'Posture',
+                        backgroundColor: 'blue',
+                        data: response.posture_values
+                      }]
+                    },title: {
+                        display: true,
+                        text: 'Posture Chart'
+                      }
+                }
+            }
+        });
+    </script>
 {% endblock %}

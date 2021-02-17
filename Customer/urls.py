@@ -15,4 +15,6 @@ urlpatterns = [
     path('logout/', views.logoutUser, name="logout"),
     path('user_settings/', views.userSettings, name="user_settings"),
 
+    path('getGraphData/', views.getGraphData, name="get_graph_data"),
+
 ]
