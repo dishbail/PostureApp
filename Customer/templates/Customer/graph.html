@@ -1,35 +1,142 @@
 {% extends 'Customer/main.html' %}
 
 {% block content %}
-    <p> Graph </p>
-    <div id="container" style="width: 75%;">
-        <canvas id="posture-chart" data-url="{% url 'Customer:get_graph_data' %}"></canvas>
-        <canvas id="sitting-chart" data-url="{% url 'Customer:get_graph_data' %}"></canvas>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+<style>
+
+    .chart-container {
+      height: 100%;
+      width: 100%;
+      min-height: 530px;
+    }
+</style>
+
+  <div class="row">
+  	<div class="col-md">
+  		<div class="card card-body">
+  			<h5>Graphs</h5>
+  		</div>
+  		<div class="card card-body">
+  			<div id="posture_chart" class="chart-container"></div>
+  		</div>
+  		<div class="card card-body">
+  			<div id="sitting_chart" class="chart-container"></div>
+  		</div>
+  	</div>
+
+  </div>
     <script>
-        var $postureChart = $("#posture-chart");
-        var $sittingChart = $("#sitting-chart");
+        var dataURL = '/getGraphData'
+        var posture_dates = []
+        var posture_values = []
+        var sitting_dates = []
+        var sitting_values = []
         $.ajax({
-            url:'/getGraphData'
-            success:function(response)
-                var ctxp = $postureChart[0].getContext("2d");
-                var ctxs = $sittingChart[0].getContext("2d");
-                new Chart(ctxp, {
-                    type: 'bar',
-                    data: {
-                      labels: response.posture_dates,
-                      datasets: [{
-                        label: 'Posture',
-                        backgroundColor: 'blue',
-                        data: response.posture_values
-                      }]
-                    },title: {
-                        display: true,
-                        text: 'Posture Chart'
-                      }
-                }
+            method:'GET',
+            url:dataURL
+            success:function(response){
+                posture_data = response.posture_data;
+                sitting_data = response.sitting_data;
+                buildPostureChart()
+                buildSittingChart()
             }
         });
+        function buildPostureChart(){
+            var posture_chart_data = {
+                "type": "line",
+        		"title": {
+        		    "text": "Posture Log",
+        		    "font-size": "24px",
+        		    "adjust-layout": true
+        		  },
+    		  "plotarea": {
+    		    "margin": "dynamic 45 60 dynamic",
+    		  },
+    		  "legend": {
+    		    "layout": "float",
+    		    "background-color": "none",
+    		    "border-width": 0,
+    		    "shadow": 0,
+    		    "align": "center",
+    		    "adjust-layout": true,
+    		    "toggle-action": "remove",
+    		    "item": {
+    		      "padding": 7,
+    		      "marginRight": 17,
+    		      "cursor": "hand"
+    		    }
+    		  },
+    		  "scale-x": {
+    			  label: {
+    		          text: 'Date'
+    		        },
+    			  transform: {
+    		          type: 'date',
+    		          all: '%mm/%d/%y<br>%h:%i:%s'
+    		        }
+    		  },
+    		  "scale-y": {
+    			  label: {
+    		          text: 'Posture Record'
+    		        },
+    			    "values":[
+    					"Correct Posture",
+    					"Inorrect Posture",
+    				],
+    		  },
+              series: posture_data,
+            }
+            zingchart.render({
+              id: 'posture_chart',
+              data: posture_chart_data,
+            });
+        }
+        function buildSittingChart(){
+            var posture_chart_data = {
+                "type": "line",
+        		"title": {
+        		    "text": "Posture Log",
+        		    "font-size": "24px",
+        		    "adjust-layout": true
+        		  },
+    		  "plotarea": {
+    		    "margin": "dynamic 45 60 dynamic",
+    		  },
+    		  "legend": {
+    		    "layout": "float",
+    		    "background-color": "none",
+    		    "border-width": 0,
+    		    "shadow": 0,
+    		    "align": "center",
+    		    "adjust-layout": true,
+    		    "toggle-action": "remove",
+    		    "item": {
+    		      "padding": 7,
+    		      "marginRight": 17,
+    		      "cursor": "hand"
+    		    }
+    		  },
+    		  "scale-x": {
+    			  label: {
+    		          text: 'Date'
+    		        },
+    			  transform: {
+    		          type: 'date',
+    		          all: '%mm/%d/%y<br>%h:%i:%s'
+    		        }
+    		  },
+    		  "scale-y": {
+    			  label: {
+    		          text: 'Sitting Record'
+    		        },
+    		  },
+              series: sitting_data,
+            }
+            zingchart.render({
+              id: 'sitting_chart',
+              data: sitting_data,
+            });
+        }
     </script>
 {% endblock %}
