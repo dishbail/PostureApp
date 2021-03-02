@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 
 from django.contrib import admin
+from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from django.forms import inlineformset_factory
@@ -94,3 +95,23 @@ def userSettings(request):
             form.save()
     context = {'form':form}
     return render(request, 'Customer/user_settings.html', context)
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, request.FILES, instance=request.user)  # request.FILES is show the selected image or file
+        if form.is_valid() and profile_form.is_valid():
+            user_form = form.save()
+            custom_form = profile_form.save(False)
+            custom_form.user = user_form
+            custom_form.save()
+            return redirect('Customer/profile.html')
+    else:
+        form = EditProfileForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user)
+        args = {}
+        #args.update(csrf(request))
+        args['form'] = form
+        args['profile_form'] = profile_form
+        return render(request, 'Customer/edit_profile.html', args)

@@ -14,3 +14,12 @@ class CustomerForm(ModelForm):
 	class Meta:
 		model = Customer
 		fields = ('name','phone','email','profile_pic')
+
+class EditProfileForm(ModelForm):
+        class Meta:
+        	model = User
+        	fields = ('email', 'first_name', 'last_name')
+class ProfileForm(ModelForm):
+        class Meta:
+         model = Customer
+         fields = ('city', 'description', 'phone', 'website', 'profile_pic', 'github', 'instagram', 'facebook', 'twitter')
