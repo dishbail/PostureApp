@@ -15,6 +15,7 @@ from .forms import *
 from.models import *
 from .decorators import *
 from datetime import timezone
+from django.template import RequestContext
 
 @login_required(login_url='Customer:login')
 def home(request):
@@ -110,7 +111,6 @@ def edit_profile(request):
         form = EditProfileForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user)
         args = {}
-        #args.update(csrf(request))
         args['form'] = form
         args['profile_form'] = profile_form
         return render(request, 'Customer/edit_profile.html', args)
