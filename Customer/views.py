@@ -107,6 +107,8 @@ def edit_profile(request):
             custom_form.user = user_form
             custom_form.save()
             return redirect('Customer/profile.html')
+        else:
+            return redirect('/')
     else:
         form = EditProfileForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user)
