@@ -15,7 +15,6 @@ from .forms import *
 from.models import *
 from .decorators import *
 from datetime import timezone
-from django.template import RequestContext
 
 @login_required(login_url='Customer:login')
 def home(request):
@@ -57,12 +56,23 @@ def register(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            instance = form.save()
 
             Customer.objects.create(
-                user=user,name = user.username, phone = None, email = user.email
+                user=instance, 
+                email = instance.email, 
+                phone = instance.phone, 
+                first_name = instance.first_name, 
+                last_name = instance.last_name, 
+                description = instance.description, 
+                address = instance.address,
+                website = instance.website, 
+                github = instance.github, 
+                twitter = instance.twitter, 
+                instagram = instance.instagram, 
+                facebook = instance.facebook
             )
-            messages.success(request, 'Account was created for ' + user.username)
+            messages.success(request, 'Account was created for ' + instance.username)
             return redirect('/login')
     context = {'form':form}
     return render(request, 'Customer/register.html', context)
@@ -113,6 +123,7 @@ def edit_profile(request):
         form = EditProfileForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user)
         args = {}
+        #args.update(csrf(request))
         args['form'] = form
         args['profile_form'] = profile_form
         return render(request, 'Customer/edit_profile.html', args)
