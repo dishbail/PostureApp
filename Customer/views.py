@@ -112,12 +112,17 @@ def edit_profile(request):
         profile_form = EditProfileForm(request.POST, request.FILES,instance=customer)
         user_form = EditUserForm(request.POST, request.FILES,instance=user)
         #profile_form = ProfileForm(request.POST, request.FILES, instance=request.user)  # request.FILES is show the selected image or file
-        if user_form.is_valid() and profile_form.is_valid():
+        if user_form.is_valid():
             user_form.save()
-            custom_form = profile_form.save(False)
-            custom_form.user = user_form
-            custom_form.save()
-            return redirect('Customer/profile.html')
+            messages.success(request, 'User Information Updated')
+
+        if profile_form.is_valid():
+            #custom_form = profile_form.save(False)
+            profile_form.user = user
+            profile_form.save()
+            customer.refresh_from_db()
+            messages.success(request, 'Profile Information Updated')
+            return redirect('/profile')
         else:
             return redirect('/')
     else:

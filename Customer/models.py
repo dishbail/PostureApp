@@ -5,16 +5,16 @@ from django.utils import timezone
 # Create your models here.
 class Customer(models.Model):
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
-    phone = models.CharField(max_length=200, null=True)
-    description = models.CharField(max_length=200, default='')
-    address = models.CharField(max_length=200, default='')
-    website = models.URLField(default='')
-    github = models.URLField(default='')
-    twitter = models.URLField(default='')
-    instagram = models.URLField(default='')
-    facebook = models.URLField(default='')
+    phone = models.CharField(max_length=200, null=True, blank= True)
+    description = models.CharField(max_length=200, default='',blank= True)
+    address = models.CharField(max_length=200, default='', blank= True)
+    website = models.URLField(default='', null=True, blank= True)
+    github = models.URLField(default='', null=True, blank= True)
+    twitter = models.URLField(default='', null=True, blank= True)
+    instagram = models.URLField(default='', null=True, blank= True)
+    facebook = models.URLField(default='', null=True, blank= True)
     profile_pic = models.ImageField(default="profile1.png", upload_to = "images/")
-    
+
     def __str__(self):
         return self.user.username
 
