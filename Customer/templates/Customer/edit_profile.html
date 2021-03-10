@@ -2,7 +2,7 @@
 
     {% block content %}
     <!-- Page content -->
-    <form method="post"> {% csrf_token %}
+    <form method="post" enctype="multipart/form-data" > {% csrf_token %}
     <div class="container" style ="position:absolute; left:350px; top:50px;">
     <div class="main-body">
     <br>
@@ -12,8 +12,11 @@
               <div class="card">
                 <div class="card-body">
                   <div class="d-flex flex-column align-items-center text-center">
-                    <img src="/static/images/profile1.png" alt="Admin" class="rounded-circle" width="150">
+                    <img src="/static/{{request.user.customer.profile_pic}}" alt="Admin" class="rounded-circle" width="150">
+                    <br>
+                    {{profile_form.profile_pic}}
                     <div class="mt-3">
+
                       <h4>{{request.user.get_username}}</h4>
                       <p class="text-secondary mb-1">{{request.user.description}}</p>
                       <p class="text-muted font-size-sm">{{request.user.city}}</p>

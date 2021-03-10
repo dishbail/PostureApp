@@ -92,22 +92,13 @@ def logoutUser(request):
     logout(request)
     return redirect('/login')
 
-@login_required(login_url='Customer:login')
-def userSettings(request):
-    customer = request.user.customer
-    form = CustomerForm(instance=customer)
-    if request.method == 'POST':
-        form = CustomerForm(request.POST, request.FILES,instance=customer)
-        if form.is_valid():
-            form.save()
-    context = {'form':form}
-    return render(request, 'Customer/user_settings.html', context)
-
+@login_required
+def edit_picture(request):
+    return redirect('/')
 @login_required
 def edit_profile(request):
     user = request.user
     customer = user.customer
-    #form = EditProfileForm(instance=customer)
     if request.method == 'POST':
         profile_form = EditProfileForm(request.POST, request.FILES,instance=customer)
         user_form = EditUserForm(request.POST, request.FILES,instance=user)
@@ -115,6 +106,7 @@ def edit_profile(request):
         if user_form.is_valid():
             user_form.save()
             messages.success(request, 'User Information Updated')
+            user.refresh_from_db()
 
         if profile_form.is_valid():
             #custom_form = profile_form.save(False)
