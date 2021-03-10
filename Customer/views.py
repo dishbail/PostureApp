@@ -56,23 +56,20 @@ def register(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
         if form.is_valid():
-            print(form)
-            instance = form.save()
+            user = form.save()
+            instance = form.cleaned_data
             Customer.objects.create(
-                user=instance, 
-                email = instance.email, 
-                phone = instance.phone, 
-                first_name = instance.first_name, 
-                last_name = instance.last_name, 
-                description = instance.description, 
-                address = instance.address,
-                website = instance.website, 
-                github = instance.github, 
-                twitter = instance.twitter, 
-                instagram = instance.instagram, 
-                facebook = instance.facebook
+                user=user,
+                phone = instance.get('phone'),
+                description = instance.get('description'),
+                address = instance.get('address'),
+                website = instance.get('website'),
+                github = instance.get('github'),
+                twitter = instance.get('twitter'),
+                instagram = instance.get('instagram'),
+                facebook = instance.get('facebook')
             )
-            messages.success(request, 'Account was created for ' + instance.username)
+            messages.success(request, 'Account was created for ' + user.username)
             return redirect('/login')
     context = {'form':form}
     return render(request, 'Customer/register.html', context)
@@ -95,35 +92,39 @@ def logoutUser(request):
     logout(request)
     return redirect('/login')
 
-@login_required(login_url='Customer:login')
-def userSettings(request):
-    customer = request.user.customer
-    form = CustomerForm(instance=customer)
-    if request.method == 'POST':
-        form = CustomerForm(request.POST, request.FILES,instance=customer)
-        if form.is_valid():
-            form.save()
-    context = {'form':form}
-    return render(request, 'Customer/user_settings.html', context)
-
+@login_required
+def edit_picture(request):
+    return redirect('/')
 @login_required
 def edit_profile(request):
+    user = request.user
+    customer = user.customer
     if request.method == 'POST':
-        form = EditProfileForm(request.POST, instance=request.user)
-        profile_form = ProfileForm(request.POST, request.FILES, instance=request.user)  # request.FILES is show the selected image or file
-        if form.is_valid() and profile_form.is_valid():
-            user_form = form.save()
-            custom_form = profile_form.save(False)
-            custom_form.user = user_form
-            custom_form.save()
-            return redirect('Customer/profile.html')
+        profile_form = EditProfileForm(request.POST, request.FILES,instance=customer)
+        user_form = EditUserForm(request.POST, request.FILES,instance=user)
+        #profile_form = ProfileForm(request.POST, request.FILES, instance=request.user)  # request.FILES is show the selected image or file
+        if user_form.is_valid():
+            user_form.save()
+            messages.success(request, 'User Information Updated')
+            user.refresh_from_db()
+
+        if profile_form.is_valid():
+            #custom_form = profile_form.save(False)
+            profile_form.user = user
+            profile_form.save()
+            customer.refresh_from_db()
+            messages.success(request, 'Profile Information Updated')
+            return redirect('/profile')
         else:
             return redirect('/')
     else:
-        form = EditProfileForm(instance=request.user)
-        profile_form = ProfileForm(instance=request.user)
-        args = {}
+        profile_form = EditProfileForm(instance=customer)
+        user_form = EditUserForm(instance=user)
+        #form = EditProfileForm(instance=customer)
+        #profile_form = ProfileForm(instance=request.user)
+        #args = {}
         #args.update(csrf(request))
-        args['form'] = form
-        args['profile_form'] = profile_form
-        return render(request, 'Customer/edit_profile.html', args)
+        #args['form'] = form
+        #args['profile_form'] = profile_form
+        context = {'user_form':user_form, 'profile_form':profile_form, 'customer': customer}
+        return render(request, 'Customer/edit_profile.html', context)

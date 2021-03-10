@@ -10,11 +10,11 @@ urlpatterns = [
     path('models/', views.model, name="model"),
     path('profile/', views.profile, name="profile"),
     path('edit_profile/',views.edit_profile, name="edit_profile"),
+    path('edit_picture/',views.edit_picture, name="edit_picture"),
 
     path('register/', views.register, name="register"),
     path('login/', views.loginUser, name="login"),
     path('logout/', views.logoutUser, name="logout"),
-    path('user_settings/', views.userSettings, name="user_settings"),
 
     path('getGraphData/', views.getGraphData, name="get_graph_data"),
 

@@ -31,13 +31,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Customer',
+    'django.contrib.admin',
 ]
 
 MIDDLEWARE = [
@@ -126,4 +126,4 @@ STATICFILES_DIRS  = [
     os.path.join(BASE_DIR, '/static')
 ]
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'Customer/static')
