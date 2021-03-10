@@ -7,17 +7,17 @@ from .models import *
 class CreateUserForm(UserCreationForm):
 	first_name = forms.CharField(required=True , widget=forms.TextInput(attrs={'placeholder':'First Name..'}))
 	last_name = forms.CharField(required=True , widget=forms.TextInput(attrs={'placeholder':'Last Name..'}))
-	description = forms.CharField(required=False , widget=forms.TextInput(attrs={'placeholder':'Description..'}))
-	address = forms.CharField(required=False , widget=forms.TextInput(attrs={'placeholder':'Address..'}))
-	website = forms.CharField(required=False , widget=forms.TextInput(attrs={'placeholder':'Website..'}))
-	github = forms.CharField(required=False , widget=forms.TextInput(attrs={'placeholder':'Github..'}))
-	twitter = forms.CharField(required=False , widget=forms.TextInput(attrs={'placeholder':'Twitter..'}))
-	instagram = forms.CharField(required=False , widget=forms.TextInput(attrs={'placeholder':'Instagram..'}))
-	facebook = forms.CharField(required=False , widget=forms.TextInput(attrs={'placeholder':'Facebook..'}))
-	phone = forms.CharField(required=False , widget=forms.TextInput(attrs={'placeholder':'Phone..'}))
+	description = forms.CharField(required=True , widget=forms.TextInput(attrs={'placeholder':'Description..'}))
+	address = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder':'Address..'}))
+	website = forms.CharField(required=True , widget=forms.TextInput(attrs={'placeholder':'Website..'}))
+	github = forms.CharField(required=True , widget=forms.TextInput(attrs={'placeholder':'Github..'}))
+	twitter = forms.CharField(required=True , widget=forms.TextInput(attrs={'placeholder':'Twitter..'}))
+	instagram = forms.CharField(required=True , widget=forms.TextInput(attrs={'placeholder':'Instagram..'}))
+	facebook = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder':'Facebook..'}))
+	phone = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder':'Phone..', 'type':'number'}))
 	class Meta:
 		model = User
-		fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name','phone','email', 'description', 'phone', 'website','github', 'instagram', 'facebook', 'twitter']
+		fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name','phone','email', 'description', 'website','github', 'instagram', 'facebook', 'twitter']
 
 class CustomerForm(ModelForm):
 	class Meta:

@@ -56,8 +56,8 @@ def register(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
         if form.is_valid():
+            print(form)
             instance = form.save()
-
             Customer.objects.create(
                 user=instance, 
                 email = instance.email, 
