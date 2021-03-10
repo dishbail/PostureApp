@@ -13,7 +13,7 @@ class Customer(models.Model):
     twitter = models.URLField(default='', null=True, blank= True)
     instagram = models.URLField(default='', null=True, blank= True)
     facebook = models.URLField(default='', null=True, blank= True)
-    profile_pic = models.ImageField(default="profile1.png", upload_to = "images/")
+    profile_pic = models.ImageField(default="profile1.png")
 
     def __str__(self):
         return self.user.username
