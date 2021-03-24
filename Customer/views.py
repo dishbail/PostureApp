@@ -15,9 +15,11 @@ from .forms import *
 from.models import *
 from .decorators import *
 from datetime import timezone
+from background_task import background
 
 @login_required(login_url='Customer:login')
 def home(request):
+    runAlgo(repeat=60,repeat_until = None)
     return render(request, 'Customer/dashboard.html')
 
 @login_required(login_url='Customer:login')
@@ -36,6 +38,11 @@ def model(request):
 def profile(request):
     return render(request, 'Customer/profile.html')
 
+@background(schedule=1) #how long after function is called should it execute
+def runAlgo():
+    print("Hello World!")
+
+@login_required(login_url='Customer:login')
 def getGraphData(request):
     customer = request.user.customer
     posture_database = customer.posturerecord_set.all()
