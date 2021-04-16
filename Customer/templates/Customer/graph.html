@@ -11,6 +11,7 @@
       min-height: 530px;
     }
 </style>
+<br>
 
   <div class="row">
   	<div class="col-md">
@@ -28,16 +29,27 @@
   </div>
     <script>
         var dataURL = '/getGraphData'
-        var posture_dates = []
-        var posture_values = []
-        var sitting_dates = []
-        var sitting_values = []
+        var posture_data = []
+        var sitting_data = []
+        //var sitting_dates = []
+        //var sitting_values = []
         $.ajax({
             method:'GET',
-            url:dataURL
+            url:dataURL,
             success:function(response){
-                posture_data = response.posture_data;
-                sitting_data = response.sitting_data;
+                console.log('RESPONSE:', response)
+                var temp_pd = response.posture_data;
+                var temp_sd  = response.sitting_data;
+                for (var i in temp_pd){
+                    posture_data.push(temp_pd[i])
+                }
+                for (var i in temp_sd){
+                    sitting_data.push(temp_sd[i])
+                    //sitting_dates.push(temp_sd[i][0])
+                    //sitting_values.push(temp_sd[i][1])
+                }
+                //console.log('sitting_dates:', sitting_dates)
+                //console.log('sitting_values:', sitting_values)
                 buildPostureChart()
                 buildSittingChart()
             }
@@ -80,12 +92,15 @@
     			  label: {
     		          text: 'Posture Record'
     		        },
-    			    "values":[
-    					"Correct Posture",
-    					"Inorrect Posture",
+                    "values":[
+    					"Incorrect Posture",
+                        "Correct Posture",
     				],
     		  },
-              series: posture_data,
+              series: [{
+                  values:posture_data,
+                  text: 'Posture Values'
+              }]
             }
             zingchart.render({
               id: 'posture_chart',
@@ -93,10 +108,10 @@
             });
         }
         function buildSittingChart(){
-            var posture_chart_data = {
+            var sitting_chart_data = {
                 "type": "line",
         		"title": {
-        		    "text": "Posture Log",
+        		    "text": "Sitting Log",
         		    "font-size": "24px",
         		    "adjust-layout": true
         		  },
@@ -128,14 +143,17 @@
     		  },
     		  "scale-y": {
     			  label: {
-    		          text: 'Sitting Record'
+    		          text: 'Sitting Record (minutes)'
     		        },
     		  },
-              series: sitting_data,
+              series: [{
+                  values:sitting_data,
+                  text: 'Sitting Values'
+              }]
             }
             zingchart.render({
               id: 'sitting_chart',
-              data: sitting_data,
+              data: sitting_chart_data,
             });
         }
     </script>
