@@ -20,8 +20,6 @@ from django.contrib import messages
 
 @login_required(login_url='Customer:login')
 def home(request):
-    st = "hi"
-    value = runAlgo(st, repeat=5,repeat_until = None)
     messages.add_message(request, messages.INFO, value)
     return render(request, 'Customer/dashboard.html')
 
