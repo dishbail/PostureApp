@@ -2,7 +2,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 
 class DashConsumer(AsyncWebsocketConsumer):
-    
+
     async def connect(self):
         self.groupname='dashboard'
         await self.channel_layer.group_add(
@@ -18,7 +18,7 @@ class DashConsumer(AsyncWebsocketConsumer):
             self.groupname,
             self.channel_name
         )
-    
+
 
     async def receive(self, text_data):
         datapoint = json.loads(text_data)

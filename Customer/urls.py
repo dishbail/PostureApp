@@ -5,7 +5,8 @@ app_name = 'Customer'
 
 urlpatterns = [
     path('', views.home, name = "home"),
-    path('notifications/', views.notif, name="notifications"),
+    path('notifs/', views.notif, name="notifs"),
+    path('notifications/', views.notifications, name="notifications"),
     path('graphs/', views.graph, name="graph"),
     path('models/', views.model, name="model"),
     path('profile/', views.profile, name="profile"),

@@ -20,12 +20,20 @@ from django.contrib import messages
 
 @login_required(login_url='Customer:login')
 def home(request):
-    messages.add_message(request, messages.INFO, value)
+    #runAlgo(user.id, repeat=60)
+    #messages.add_message(request, messages.INFO, value)
     return render(request, 'Customer/dashboard.html')
 
 @login_required(login_url='Customer:login')
 def notif(request):
     return render(request, 'Customer/notif.html')
+
+@login_required(login_url='Customer:login')
+def notifications(request):
+    customer = request.user.customer
+    records = customer.posturerecord_set.all()
+    records = records.order_by('-date_created')
+    return render(request, 'Customer/notifications.html',{'records':records})
 
 @login_required(login_url='Customer:login')
 def graph(request):
@@ -39,11 +47,10 @@ def model(request):
 def profile(request):
     return render(request, 'Customer/profile.html')
 
-@background(schedule=1) #how long after function is called should it execute
-def runAlgo(st):
-    print(st)
-    posture_val = "Correct Posture"
-    return posture_val
+@background(schedule=0) #how long after function is called should it execute
+def runAlgo(user_id):
+    user = User.objects.get(pk=user_id)
+    customer = user.customer
 
 @login_required(login_url='Customer:login')
 def getGraphData(request):
