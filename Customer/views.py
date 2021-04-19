@@ -29,6 +29,20 @@ def notif(request):
     return render(request, 'Customer/notif.html')
 
 @login_required(login_url='Customer:login')
+def notifsAjax(request):
+    return render(request, 'Customer/notifajax.html')
+
+@login_required(login_url='Customer:login')
+def getNotifData(request):
+    customer = request.user.customer
+    records = customer.posturerecord_set.all()
+    records = records.order_by('-date_created')
+    data = []
+    for r in records:
+        data.append({'Date': r.date_created.strftime("%Y-%m-%d %H:%M:%S"), 'Posture': r.get_posture_value_display()})
+    return JsonResponse({'data':data})
+
+@login_required(login_url='Customer:login')
 def notifications(request):
     customer = request.user.customer
     records = customer.posturerecord_set.all()
