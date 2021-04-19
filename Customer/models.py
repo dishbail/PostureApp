@@ -25,7 +25,7 @@ class PostureRecord(models.Model):
     )
     customer = models.ForeignKey(Customer, null = True, on_delete=models.SET_NULL)
     date_created = models.DateTimeField(default=timezone.now(),blank=True, null=True)
-    posture_value = models.CharField(choices = POSTURE_CHOICES, max_length = 30, null = True)
+    posture_value = models.IntegerField(choices = POSTURE_CHOICES, max_length = 30, null = True)
     confidence_value = models.FloatField(default = 1)
 
 class SittingRecord(models.Model):

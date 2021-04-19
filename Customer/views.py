@@ -16,15 +16,24 @@ from.models import *
 from .decorators import *
 from datetime import timezone
 from background_task import background
+from django.contrib import messages
 
 @login_required(login_url='Customer:login')
 def home(request):
-    runAlgo(repeat=60,repeat_until = None)
+    #runAlgo(user.id, repeat=60)
+    #messages.add_message(request, messages.INFO, value)
     return render(request, 'Customer/dashboard.html')
 
 @login_required(login_url='Customer:login')
 def notif(request):
     return render(request, 'Customer/notif.html')
+
+@login_required(login_url='Customer:login')
+def notifications(request):
+    customer = request.user.customer
+    records = customer.posturerecord_set.all()
+    records = records.order_by('-date_created')
+    return render(request, 'Customer/notifications.html',{'records':records})
 
 @login_required(login_url='Customer:login')
 def graph(request):
@@ -38,24 +47,24 @@ def model(request):
 def profile(request):
     return render(request, 'Customer/profile.html')
 
-@background(schedule=1) #how long after function is called should it execute
-def runAlgo():
-    print("Hello World!")
+@background(schedule=0) #how long after function is called should it execute
+def runAlgo(user_id):
+    user = User.objects.get(pk=user_id)
+    customer = user.customer
 
 @login_required(login_url='Customer:login')
 def getGraphData(request):
     customer = request.user.customer
-    posture_database = customer.posturerecord_set.all()
+    #posture_database = customer.posturerecord_set.all()
+    posture_database = PostureRecord.objects.filter(customer=customer)
     sitting_database = customer.sittingrecord_set.all()
     posture_data = []
     sitting_data = []
     for i in posture_database:
-        posture_data.append([i.date_created, i.posture_value])
+        posture_data.append([i.date_created.timestamp()*1000, i.get_posture_value_display()])
     for i in sitting_database:
-        sitting_data.append([i.date_created, i.sitting_time_in_min])
-    posture_data = []
-    sitting_data = []
-    return JsonResponse({'posture_data': posture_data, 'sitting_data':sitting_data})
+        sitting_data.append([i.date_created.timestamp()*1000, i.sitting_time_in_min])
+    return JsonResponse({'customer':customer.user.username,'posture_data': posture_data, 'sitting_data':sitting_data})
 
 @unauthenticated_user
 def register(request):
