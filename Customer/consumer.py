@@ -1,5 +1,11 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
+import sqlite3
+
+# Create a SQL connection to the SQLite database
+con = sqlite3.connect("../db.sqlite3")
+
+cur = con.cursor
 
 class DashConsumer(AsyncWebsocketConsumer):
 
@@ -33,6 +39,7 @@ class DashConsumer(AsyncWebsocketConsumer):
         )
 
         print ('>>>>',text_data)
+        cur.execute('INSERT INTO Customer_posturerecord (posture_value, Customer_customer) VALUES('+ text_data+',' + self.user + ');') #update the posture record table
 
         # pass
 

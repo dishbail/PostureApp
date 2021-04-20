@@ -15,7 +15,7 @@ from .forms import *
 from.models import *
 from .decorators import *
 from datetime import timezone
-from background_task import background
+#from background_task import background
 from django.contrib import messages
 
 @login_required(login_url='Customer:login')
@@ -61,7 +61,7 @@ def model(request):
 def profile(request):
     return render(request, 'Customer/profile.html')
 
-@background(schedule=0) #how long after function is called should it execute
+#@background(schedule=0) #how long after function is called should it execute
 def runAlgo(user_id):
     user = User.objects.get(pk=user_id)
     customer = user.customer
