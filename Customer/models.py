@@ -20,8 +20,8 @@ class Customer(models.Model):
 
 class PostureRecord(models.Model):
     POSTURE_CHOICES = (
-        (0, 'Correct Posture'),
-        (1, 'Incorrect Posture')
+        (1, 'Correct Posture'),
+        (0, 'Incorrect Posture')
     )
     customer = models.ForeignKey(Customer, null = True, on_delete=models.SET_NULL)
     date_created = models.DateTimeField(default=timezone.now(),blank=True, null=True)
