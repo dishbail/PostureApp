@@ -15,8 +15,32 @@ from .forms import *
 from.models import *
 from .decorators import *
 from datetime import timezone
-#from background_task import background
+from background_task import background
 from django.contrib import messages
+
+import json
+import serial
+import numpy as np
+import pickle
+import random,time
+
+def call_once():
+    filename = 'Customer/static/model/SVM.sav'
+    model = pickle.load(open(filename, 'rb'))
+
+def readdata():
+    filename = 'Customer/static/model/SVM.sav'
+    model = pickle.load(open(filename, 'rb'))
+    ser = serial.Serial('COM3',9600)
+    x = ser.readline().decode('UTF-8').split(", ")
+    if len(x) <256:
+        ser.close()
+        x = readdata()
+    x = np.array(x)
+    x = x.astype(np.float)
+    x = x[np.newaxis,...]
+    ser.close()
+    return x
 
 @login_required(login_url='Customer:login')
 def home(request):
@@ -44,6 +68,7 @@ def getNotifData(request):
 
 @login_required(login_url='Customer:login')
 def notifications(request):
+    runAlgo(user.id, repeat=60)
     customer = request.user.customer
     records = customer.posturerecord_set.all()
     records = records.order_by('-date_created')
@@ -61,10 +86,20 @@ def model(request):
 def profile(request):
     return render(request, 'Customer/profile.html')
 
-#@background(schedule=0) #how long after function is called should it execute
+@background(schedule=0) #how long after function is called should it execute
 def runAlgo(user_id):
     user = User.objects.get(pk=user_id)
     customer = user.customer
+    x = readdata()
+    data = model.predict(x);
+    if(data == 0):
+        result = 1
+    else:
+        result = 0
+    PostureRecord.objects.create(
+        customer = customer
+        posture_value = result
+    )
 
 @login_required(login_url='Customer:login')
 def getGraphData(request):
