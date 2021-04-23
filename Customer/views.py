@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
 
+import django
+
 from django.contrib import admin
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.models import User
@@ -25,21 +27,20 @@ import pickle
 import random,time
 
 def call_once():
-    filename = 'Customer/static/model/SVM.sav'
+    filename = './static/model/SVM.sav'
     model = pickle.load(open(filename, 'rb'))
 
 def readdata():
-    filename = 'Customer/static/model/SVM.sav'
-    model = pickle.load(open(filename, 'rb'))
     ser = serial.Serial('COM3',9600)
-    x = ser.readline().decode('UTF-8').split(", ")
-    if len(x) <256:
-        ser.close()
-        x = readdata()
-    x = np.array(x)
-    x = x.astype(np.float)
-    x = x[np.newaxis,...]
+    x = np.ones(256)
+    y = ser.readline().decode('UTF-8').split(", ")
     ser.close()
+    if len(y) !=256:
+        y = readdata()
+    x = np.array(y)
+    x = x.astype(np.float)
+    if x.ndim<2:
+        x = x[np.newaxis,...]
     return x
 
 @login_required(login_url='Customer:login')
@@ -68,7 +69,8 @@ def getNotifData(request):
 
 @login_required(login_url='Customer:login')
 def notifications(request):
-    runAlgo(user.id, repeat=60)
+    #runAlgo(request.user.id, repeat=60)
+    runAlgo2(request)
     customer = request.user.customer
     records = customer.posturerecord_set.all()
     records = records.order_by('-date_created')
@@ -91,16 +93,26 @@ def runAlgo(user_id):
     user = User.objects.get(pk=user_id)
     customer = user.customer
     x = readdata()
-    data = model.predict(x);
+    data = model.predict(x)
     if(data == 0):
         result = 1
     else:
         result = 0
-    PostureRecord.objects.create(
-        customer = customer
-        posture_value = result
-    )
+    PostureRecord.objects.create(customer=customer, posture_value=result)
 
+def runAlgo2(request):
+    customer = request.user.customer
+    x = readdata()
+    print(x)
+    filename = 'Customer\static\model\SVM.sav'
+    svm_model = pickle.load(open(filename, 'rb'))
+    data = svm_model.predict(x)
+    now = django.utils.timezone.now()
+    if(data == 0):
+        result = 1
+    else:
+        result = 0
+    PostureRecord.objects.create(customer=customer, date_created = now, posture_value=result)
 @login_required(login_url='Customer:login')
 def getGraphData(request):
     customer = request.user.customer

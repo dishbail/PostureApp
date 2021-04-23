@@ -1,15 +1,18 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.auth import login
 import json
 import sqlite3
 
 # Create a SQL connection to the SQLite database
 con = sqlite3.connect("../db.sqlite3")
 
-cur = con.cursor
+cur = con.cursor()
 
 class DashConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
+        #await login(self.scope,user)
+        #self.user = self.scope['user']
         self.groupname='dashboard'
         await self.channel_layer.group_add(
             self.groupname,
@@ -25,7 +28,6 @@ class DashConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-
     async def receive(self, text_data):
         datapoint = json.loads(text_data)
         val =datapoint['value']
@@ -39,7 +41,7 @@ class DashConsumer(AsyncWebsocketConsumer):
         )
 
         print ('>>>>',text_data)
-        cur.execute('INSERT INTO Customer_posturerecord (posture_value, Customer_customer) VALUES('+ text_data+',' + self.user + ');') #update the posture record table
+        #cur.execute('INSERT INTO Customer_posturerecord (posture_value, Customer_customer) VALUES('+ text_data+',' + self.user.Customer + ');') #update the posture record table
 
         # pass
 
